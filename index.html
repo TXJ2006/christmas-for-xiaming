@@ -700,7 +700,7 @@
 
       function treeGeometry() {
         const mobile = width < 760;
-        const treeHeight = mobile ? height * .43 : Math.min(height * .69, width * .48);
+        const treeHeight = mobile ? height * (width < 360 ? .38 : .43) : Math.min(height * .69, width * .48);
         const centerX = mobile ? width * .72 : width * .77;
         const baseY = mobile ? height * .91 : height * .91;
         return { centerX, baseY, treeHeight, treeWidth: treeHeight * .72 };
