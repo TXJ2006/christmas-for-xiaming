@@ -48,6 +48,8 @@
       -webkit-font-smoothing: antialiased;
     }
 
+    body.modal-open { overflow: hidden; }
+
     button, a { font: inherit; }
 
     a { color: inherit; }
@@ -409,6 +411,383 @@
 
     .toast.is-visible { opacity: 1; transform: translateY(0); }
 
+    .reading-modal[hidden] { display: none; }
+
+    .reading-modal {
+      position: fixed;
+      z-index: 20;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      padding: 22px;
+      background: rgb(7 14 19 / 78%);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+
+    .modal-backdrop {
+      position: absolute;
+      inset: 0;
+      cursor: pointer;
+    }
+
+    .modal-shell {
+      position: relative;
+      width: min(100%, 960px);
+      height: min(100%, 720px);
+      overflow: hidden;
+      border: 1px solid rgb(231 201 135 / 36%);
+      background: #16292f;
+      box-shadow: 0 28px 100px rgb(0 0 0 / 45%), inset 0 1px 0 rgb(255 255 255 / 8%);
+    }
+
+    .modal-close {
+      position: absolute;
+      z-index: 12;
+      top: 16px;
+      right: 18px;
+      width: 36px;
+      height: 36px;
+      border: 1px solid rgb(231 201 135 / 42%);
+      border-radius: 50%;
+      background: rgb(16 27 37 / 58%);
+      color: var(--snow);
+      cursor: pointer;
+      font-size: 22px;
+      line-height: 1;
+      transition: background 180ms ease, color 180ms ease, transform 180ms ease;
+    }
+
+    .modal-close:hover { transform: rotate(8deg); background: rgb(231 201 135 / 17%); color: var(--gold); }
+    .modal-close:focus-visible, .page-button:focus-visible { outline: 2px solid var(--gold); outline-offset: 4px; }
+
+    .mail-stage, .page-viewer {
+      position: absolute;
+      inset: 0;
+    }
+
+    .mail-stage[hidden], .page-viewer[hidden] { display: none !important; }
+
+    .mail-stage {
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 50% 45%, rgb(75 108 100 / 28%), transparent 34%),
+        linear-gradient(145deg, #12232a, #0e1d24 72%);
+    }
+
+    .mail-stage::before, .mail-stage::after {
+      position: absolute;
+      content: "";
+      pointer-events: none;
+    }
+
+    .mail-stage::before {
+      width: min(62vw, 500px);
+      height: min(62vw, 500px);
+      border: 1px solid rgb(231 201 135 / 12%);
+      border-radius: 50%;
+      box-shadow: 0 0 0 36px rgb(231 201 135 / 3%), 0 0 0 72px rgb(231 201 135 / 2%);
+    }
+
+    .mail-stage::after {
+      width: 100%;
+      height: 100%;
+      background-image: radial-gradient(rgb(244 245 238 / 38%) 1px, transparent 1px);
+      background-size: 90px 90px;
+      opacity: .22;
+    }
+
+    .envelope-scene {
+      position: relative;
+      z-index: 2;
+      display: grid;
+      place-items: center;
+      width: min(86vw, 520px);
+    }
+
+    .envelope-shadow {
+      position: absolute;
+      bottom: 65px;
+      width: 72%;
+      height: 22px;
+      border-radius: 50%;
+      background: rgb(0 0 0 / 36%);
+      filter: blur(10px);
+      transform: scale(.8);
+      transition: transform 1.2s ease;
+    }
+
+    .envelope {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 1.58;
+      transform: translateY(25px) rotate(-2deg);
+      filter: drop-shadow(0 20px 18px rgb(0 0 0 / 35%));
+    }
+
+    .envelope-back, .envelope-front, .envelope-letter, .envelope-flap {
+      position: absolute;
+      inset: 0;
+    }
+
+    .envelope-back {
+      z-index: 1;
+      background: linear-gradient(145deg, #d0b682, #98744e);
+      clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+    }
+
+    .envelope-back::before, .envelope-back::after {
+      position: absolute;
+      width: 71%;
+      height: 1px;
+      background: rgb(87 59 37 / 42%);
+      content: "";
+    }
+
+    .envelope-back::before { top: 35%; left: -4%; transform: rotate(32deg); }
+    .envelope-back::after { top: 35%; right: -4%; transform: rotate(-32deg); }
+
+    .envelope-letter {
+      z-index: 2;
+      left: 11%;
+      right: 11%;
+      top: 12%;
+      bottom: auto;
+      height: 80%;
+      padding: 20px 18px;
+      background:
+        radial-gradient(circle at 24% 22%, rgb(255 255 255 / 34%) 0 1px, transparent 1px),
+        linear-gradient(104deg, #f7e7be, #dfc997);
+      color: #5a4530;
+      box-shadow: 0 1px 8px rgb(74 46 26 / 18%);
+      transform: translateY(42%);
+      transition: transform 1.5s cubic-bezier(.2, .8, .2, 1);
+    }
+
+    .envelope-letter::before {
+      position: absolute;
+      inset: 12px;
+      border: 1px solid rgb(117 79 41 / 22%);
+      content: "";
+    }
+
+    .envelope-letter-label {
+      position: absolute;
+      top: 34%;
+      left: 50%;
+      width: max-content;
+      transform: translateX(-50%);
+      font-family: "Winter Letter", serif;
+      font-size: clamp(25px, 5vw, 42px);
+      line-height: 1;
+      white-space: nowrap;
+    }
+
+    .envelope-front {
+      z-index: 4;
+      background: linear-gradient(144deg, #ad8759, #8b6747 70%, #745136);
+      clip-path: polygon(0 34%, 50% 67%, 100% 34%, 100% 100%, 0 100%);
+    }
+
+    .envelope-front::after {
+      position: absolute;
+      inset: 8% 9% 7%;
+      border: 1px solid rgb(245 224 178 / 25%);
+      content: "";
+      clip-path: polygon(0 35%, 50% 67%, 100% 35%, 100% 100%, 0 100%);
+    }
+
+    .envelope-flap {
+      z-index: 6;
+      height: 64%;
+      background: linear-gradient(145deg, #dbc38f, #b18b5a);
+      clip-path: polygon(0 0, 100% 0, 50% 100%);
+      transform-origin: top center;
+      transition: transform 1.2s cubic-bezier(.55, .05, .25, .95);
+    }
+
+    .envelope-flap::after {
+      position: absolute;
+      inset: 11px 10% 0;
+      border-bottom: 1px solid rgb(91 61 35 / 25%);
+      content: "";
+      clip-path: polygon(0 0, 100% 0, 50% 100%);
+    }
+
+    .wax-seal {
+      position: absolute;
+      z-index: 8;
+      top: 49%;
+      left: 50%;
+      display: grid;
+      width: 70px;
+      height: 70px;
+      place-items: center;
+      border: 5px solid #9b4f48;
+      border-radius: 50%;
+      background: #b65f58;
+      color: #f5d494;
+      font-family: Georgia, serif;
+      font-size: 22px;
+      letter-spacing: -2px;
+      box-shadow: inset 3px 4px 0 rgb(239 158 133 / 24%), inset -4px -5px 0 rgb(83 34 31 / 26%), 0 6px 10px rgb(66 32 26 / 24%);
+      transform: translate(-50%, -50%);
+      transition: transform .6s ease, opacity .6s ease;
+    }
+
+    .wax-seal::before { content: "✦"; position: absolute; top: 6px; left: 8px; font-size: 10px; }
+
+    .stage-caption {
+      position: relative;
+      z-index: 3;
+      margin: 42px 0 0;
+      color: rgb(244 245 238 / 72%);
+      font-size: 13px;
+      letter-spacing: 3px;
+    }
+
+    .mail-stage.is-opening .envelope { animation: envelope-rise 1.05s .15s both; }
+    .mail-stage.is-opening .envelope-shadow { animation: shadow-spread 1.05s .15s both; }
+    .mail-stage.is-opening .envelope-flap { transform: rotateX(180deg); }
+    .mail-stage.is-opening .envelope-letter { transform: translateY(-18%); }
+    .mail-stage.is-opening .wax-seal { transform: translate(-50%, -50%) scale(.65) rotate(-18deg); opacity: 0; }
+    .mail-stage.is-opening .stage-caption { animation: caption-pulse 1.3s ease-in-out infinite; }
+
+    @keyframes envelope-rise {
+      0% { transform: translateY(25px) rotate(-2deg); }
+      55% { transform: translateY(-9px) rotate(1deg); }
+      100% { transform: translateY(0) rotate(0); }
+    }
+    @keyframes shadow-spread {
+      0% { transform: scale(.8); opacity: .5; }
+      55% { transform: scale(1); opacity: .9; }
+      100% { transform: scale(.92); opacity: .65; }
+    }
+    @keyframes caption-pulse {
+      50% { opacity: .48; }
+    }
+
+    .page-viewer {
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      gap: 16px;
+      padding: 34px clamp(22px, 5vw, 62px) 28px;
+      background:
+        radial-gradient(circle at 15% 22%, rgb(231 201 135 / 7%) 0 1px, transparent 1px),
+        linear-gradient(135deg, #172a30, #122329);
+    }
+
+    .page-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: rgb(244 245 238 / 68%);
+      font-size: 12px;
+      letter-spacing: 1.5px;
+    }
+
+    .page-toolbar strong { color: var(--gold); font-weight: 400; }
+
+    .paper-stage {
+      display: grid;
+      min-height: 0;
+      place-items: center;
+      perspective: 1600px;
+    }
+
+    .reading-page {
+      position: relative;
+      display: none;
+      width: min(100%, 670px);
+      min-height: 420px;
+      height: min(58vh, 470px);
+      overflow: hidden;
+      padding: clamp(38px, 7vw, 68px) clamp(26px, 8vw, 82px);
+      border: 1px solid rgb(119 78 38 / 25%);
+      background:
+        radial-gradient(circle at 18% 17%, rgb(116 77 39 / 12%) 0 1px, transparent 1px),
+        radial-gradient(circle at 82% 76%, rgb(116 77 39 / 10%) 0 1px, transparent 1px),
+        repeating-linear-gradient(0deg, rgb(117 79 41 / 3%) 0 1px, transparent 1px 4px),
+        linear-gradient(110deg, #f7e9c8, #dfc494 64%, #edd9ad);
+      color: #493829;
+      box-shadow: 0 20px 32px rgb(0 0 0 / 24%), inset 0 0 0 8px rgb(251 233 192 / 28%);
+      transform-origin: left center;
+    }
+
+    .reading-page.is-active { display: block; animation: page-arrive .66s cubic-bezier(.2, .8, .2, 1) both; }
+    .reading-page::before, .reading-page::after { position: absolute; content: ""; pointer-events: none; }
+    .reading-page::before { inset: 16px; border: 1px solid rgb(117 79 41 / 24%); }
+    .reading-page::after { right: 28px; bottom: 22px; width: 42px; height: 42px; border-right: 1px solid rgb(117 79 41 / 35%); border-bottom: 1px solid rgb(117 79 41 / 35%); transform: skew(-12deg); }
+
+    @keyframes page-arrive {
+      from { opacity: 0; transform: rotateY(-22deg) translateX(-18px); }
+      to { opacity: 1; transform: rotateY(0) translateX(0); }
+    }
+
+    .page-ornament {
+      margin: 0 0 18px;
+      color: #8d6842;
+      font-family: Georgia, serif;
+      font-size: 12px;
+      letter-spacing: 4px;
+      text-align: center;
+    }
+
+    .reading-page h3 {
+      position: relative;
+      z-index: 1;
+      margin: 0;
+      color: #483629;
+      font-family: "Winter Letter", serif;
+      font-size: clamp(30px, 5vw, 48px);
+      font-weight: 400;
+      line-height: 1.45;
+      text-align: center;
+    }
+
+    .reading-page p {
+      position: relative;
+      z-index: 1;
+      max-width: 520px;
+      margin: 24px auto 0;
+      color: #69533e;
+      font-size: clamp(14px, 1.7vw, 17px);
+      line-height: 2.15;
+      text-align: center;
+    }
+
+    .reading-page .page-signature {
+      margin-top: 35px;
+      color: #4c3929;
+      font-family: "Winter Letter", serif;
+      font-size: 25px;
+    }
+
+    .page-controls {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+    }
+
+    .page-button {
+      min-width: 112px;
+      min-height: 42px;
+      border: 1px solid rgb(231 201 135 / 44%);
+      background: rgb(231 201 135 / 7%);
+      color: var(--snow);
+      cursor: pointer;
+      transition: background 180ms ease, color 180ms ease, transform 180ms ease;
+    }
+
+    .page-button:hover:not(:disabled) { transform: translateY(-2px); background: rgb(231 201 135 / 16%); color: var(--gold); }
+    .page-button:active:not(:disabled) { transform: translateY(0) scale(.98); }
+    .page-button:disabled { opacity: .34; cursor: not-allowed; }
+
+    .page-hint { color: rgb(244 245 238 / 46%); font-size: 11px; letter-spacing: 1px; }
+
     @media (max-width: 760px) {
       :root { --page-pad: 24px; }
 
@@ -453,6 +832,19 @@
       .letter-copy { margin-top: 18px; font-size: 14px; }
 
       .toast { right: 16px; bottom: 16px; }
+
+      .reading-modal { padding: 0; }
+      .modal-shell { width: 100%; height: 100%; border: 0; }
+      .modal-close { top: 14px; right: 14px; }
+      .envelope-scene { width: min(88vw, 440px); }
+      .stage-caption { margin-top: 32px; font-size: 11px; letter-spacing: 2px; }
+      .page-viewer { gap: 10px; padding: 62px 18px 20px; }
+      .page-toolbar { font-size: 10px; }
+      .reading-page { min-height: 390px; height: min(61vh, 520px); padding: 46px 27px; }
+      .reading-page p { line-height: 1.95; }
+      .page-controls { gap: 10px; }
+      .page-button { min-width: 96px; min-height: 42px; font-size: 13px; }
+      .page-hint { display: none; }
     }
 
     @media (max-width: 390px) {
@@ -469,6 +861,9 @@
         animation-iteration-count: 1 !important;
         transition-duration: .01ms !important;
       }
+      .mail-stage.is-opening .envelope,
+      .mail-stage.is-opening .envelope-shadow,
+      .reading-page.is-active { animation: none; }
     }
   </style>
 </head>
@@ -494,7 +889,7 @@
             <span class="light-symbol" aria-hidden="true"></span>
             <span class="light-label">点亮这棵树</span>
           </button>
-          <a class="text-link" href="#letter">读一读这封信 <span aria-hidden="true">↘</span></a>
+          <a class="text-link" id="open-letter" href="#letter">拆开这封信 <span aria-hidden="true">↘</span></a>
         </div>
       </div>
 
@@ -514,6 +909,65 @@
   <footer class="footer">圣诞快乐，夏鸣。</footer>
   <div class="toast" role="status" aria-live="polite"></div>
 
+  <div class="reading-modal" id="reading-modal" hidden aria-hidden="true">
+    <div class="modal-backdrop" data-close-letter></div>
+    <div class="modal-shell" role="dialog" aria-modal="true" aria-labelledby="reading-title">
+      <button class="modal-close" type="button" aria-label="关闭信件阅读器" title="关闭">×</button>
+
+      <div class="mail-stage" data-mail-stage>
+        <div class="envelope-scene">
+          <div class="envelope-shadow" aria-hidden="true"></div>
+          <div class="envelope" aria-label="一封正在打开的复古信封">
+            <div class="envelope-back"></div>
+            <div class="envelope-letter"><span class="envelope-letter-label">致 夏鸣</span></div>
+            <div class="envelope-front"></div>
+            <div class="envelope-flap"></div>
+            <div class="wax-seal" aria-hidden="true">JX</div>
+          </div>
+          <p class="stage-caption">正在拆开江小唐的来信</p>
+        </div>
+      </div>
+
+      <div class="page-viewer" data-page-viewer hidden>
+        <div class="page-toolbar">
+          <span id="reading-title">江小唐的冬日来信</span>
+          <strong data-page-count>第 1 页 / 4</strong>
+        </div>
+
+        <div class="paper-stage">
+          <article class="reading-page is-active" data-page="0">
+            <p class="page-ornament">✦  WINTER POST  ✦</p>
+            <h3>夏鸣，圣诞快乐。</h3>
+            <p>这封信穿过一场小雪，终于落在你手里。先别急着往下读，让今晚的灯光替我说一句：愿你被好好惦记。</p>
+            <p class="page-signature">江小唐</p>
+          </article>
+          <article class="reading-page" data-page="1">
+            <p class="page-ornament">✦  FIRST WISH  ✦</p>
+            <h3>愿你被喜欢的事物包围，<br>也总能遇见温柔的人。</h3>
+            <p>愿你喜欢的歌，总在恰好的时候响起。愿你走过的每条路，都有微小的好事在路边等你。</p>
+          </article>
+          <article class="reading-page" data-page="2">
+            <p class="page-ornament">✦  SECOND WISH  ✦</p>
+            <h3>愿平凡的日子，<br>也有值得期待的光。</h3>
+            <p>愿忙碌的日子里，有值得期待的小事。愿每个清晨，都能遇见一点好消息。新的一年，心里有光，脚下有路。</p>
+          </article>
+          <article class="reading-page" data-page="3">
+            <p class="page-ornament">✦  LAST PAGE  ✦</p>
+            <h3>愿你一直被世界温柔以待。</h3>
+            <p>如果冬夜还有一点冷，就把这棵树的灯光分给你一半。剩下的一半，留给下一次见面。</p>
+            <p class="page-signature">江小唐 · 圣诞</p>
+          </article>
+        </div>
+
+        <div class="page-controls">
+          <button class="page-button" type="button" data-prev-page disabled>上一页</button>
+          <span class="page-hint">方向键也可以翻页</span>
+          <button class="page-button" type="button" data-next-page>下一页</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <script>
     (() => {
       const canvas = document.querySelector(".scene");
@@ -523,6 +977,15 @@
       const lightLabel = document.querySelector(".light-label");
       const shareButton = document.querySelector(".share-button");
       const toast = document.querySelector(".toast");
+      const openLetterLink = document.querySelector("#open-letter");
+      const readingModal = document.querySelector("#reading-modal");
+      const mailStage = document.querySelector("[data-mail-stage]");
+      const pageViewer = document.querySelector("[data-page-viewer]");
+      const pages = [...document.querySelectorAll(".reading-page")];
+      const pageCount = document.querySelector("[data-page-count]");
+      const previousPage = document.querySelector("[data-prev-page]");
+      const nextPage = document.querySelector("[data-next-page]");
+      const closeLetter = document.querySelector(".modal-close");
       const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
       const colors = ["#efcf85", "#f3e2b2", "#df8177", "#e7efdf", "#c4d8cf"];
       const flakes = [];
@@ -534,6 +997,9 @@
       let toastTimer;
       let sceneVisible = true;
       let lightStrength = 0;
+      let currentPage = 0;
+      let openingTimer = 0;
+      let lastFocusedElement = null;
 
       function seededRandom(seed) {
         let value = seed;
@@ -944,6 +1410,61 @@
         paint(time);
         if (!reducedMotion.matches && sceneVisible && !document.hidden) frame = window.requestAnimationFrame(animate);
       }
+
+      function setPage(nextIndex) {
+        currentPage = Math.max(0, Math.min(pages.length - 1, nextIndex));
+        pages.forEach((page, index) => page.classList.toggle("is-active", index === currentPage));
+        pageCount.textContent = `第 ${currentPage + 1} 页 / ${pages.length}`;
+        previousPage.disabled = currentPage === 0;
+        nextPage.disabled = currentPage === pages.length - 1;
+      }
+
+      function showPages() {
+        window.clearTimeout(openingTimer);
+        mailStage.classList.remove("is-opening");
+        mailStage.hidden = true;
+        pageViewer.hidden = false;
+        setPage(0);
+        nextPage.focus({ preventScroll: true });
+      }
+
+      function openReading(event) {
+        event.preventDefault();
+        lastFocusedElement = document.activeElement;
+        readingModal.hidden = false;
+        readingModal.setAttribute("aria-hidden", "false");
+        document.body.classList.add("modal-open");
+        mailStage.hidden = false;
+        pageViewer.hidden = true;
+        mailStage.classList.remove("is-opening");
+        setPage(0);
+        requestAnimationFrame(() => mailStage.classList.add("is-opening"));
+        openingTimer = window.setTimeout(showPages, reducedMotion.matches ? 80 : 2450);
+      }
+
+      function closeReading() {
+        window.clearTimeout(openingTimer);
+        readingModal.hidden = true;
+        readingModal.setAttribute("aria-hidden", "true");
+        document.body.classList.remove("modal-open");
+        mailStage.classList.remove("is-opening");
+        mailStage.hidden = false;
+        pageViewer.hidden = true;
+        if (lastFocusedElement && typeof lastFocusedElement.focus === "function") lastFocusedElement.focus({ preventScroll: true });
+      }
+
+      openLetterLink.addEventListener("click", openReading);
+      closeLetter.addEventListener("click", closeReading);
+      document.querySelector("[data-close-letter]").addEventListener("click", closeReading);
+      previousPage.addEventListener("click", () => setPage(currentPage - 1));
+      nextPage.addEventListener("click", () => setPage(currentPage + 1));
+      document.addEventListener("keydown", (event) => {
+        if (readingModal.hidden) return;
+        if (event.key === "Escape") closeReading();
+        if (pageViewer.hidden) return;
+        if (event.key === "ArrowRight") setPage(currentPage + 1);
+        if (event.key === "ArrowLeft") setPage(currentPage - 1);
+      });
 
       lightButton.addEventListener("click", () => {
         lightsOn = !lightsOn;
