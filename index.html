@@ -211,6 +211,46 @@
       margin-top: 34px;
     }
 
+    .memory-link {
+      display: inline-flex;
+      min-height: 44px;
+      align-items: center;
+      gap: 9px;
+      padding: 0 13px;
+      border: 1px solid rgb(215 205 231 / 54%);
+      background: rgb(216 207 229 / 10%);
+      color: rgb(246 241 246 / 83%);
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 220ms ease, border-color 220ms ease, color 220ms ease, transform 220ms ease;
+    }
+
+    .memory-link:hover {
+      transform: translateY(-2px);
+      border-color: rgb(232 211 205 / 82%);
+      background: rgb(232 211 205 / 18%);
+      color: #fff8f1;
+    }
+
+    .memory-link:active { transform: translateY(0) scale(.98); }
+
+    .memory-link:focus-visible {
+      outline: 2px solid #e8d3cc;
+      outline-offset: 4px;
+    }
+
+    .memory-link-mark {
+      display: inline-grid;
+      width: 18px;
+      height: 18px;
+      place-items: center;
+      border: 1px solid rgb(232 211 205 / 82%);
+      border-radius: 50%;
+      color: #eed8d1;
+      font-size: 11px;
+      line-height: 1;
+    }
+
     .light-button {
       display: inline-flex;
       min-height: 48px;
@@ -303,6 +343,8 @@
       text-align: center;
     }
 
+    .letter[hidden] { display: none !important; }
+
     .letter::before, .letter::after {
       position: absolute;
       left: 50%;
@@ -391,6 +433,115 @@
       font-size: 11px;
       letter-spacing: 1px;
     }
+
+    .memory-modal[hidden] { display: none; }
+
+    .memory-modal {
+      position: fixed;
+      z-index: 30;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      padding: 18px;
+      background: rgb(34 29 48 / 72%);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+
+    .memory-backdrop { position: absolute; inset: 0; cursor: pointer; }
+
+    .memory-shell {
+      position: relative;
+      width: min(100%, 1080px);
+      height: min(100%, 720px);
+      overflow: hidden;
+      border: 1px solid rgb(232 211 205 / 52%);
+      background: #7f819f;
+      box-shadow: 0 30px 100px rgb(34 29 48 / 45%), inset 0 1px 0 rgb(255 255 255 / 22%);
+    }
+
+    .memory-canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+
+    .memory-vignette {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background: radial-gradient(ellipse at center, transparent 35%, rgb(51 43 73 / 24%) 100%);
+    }
+
+    .memory-head {
+      position: absolute;
+      z-index: 2;
+      top: 24px;
+      left: 28px;
+      right: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: rgb(255 249 243 / 86%);
+      font-size: 12px;
+      letter-spacing: 2px;
+    }
+
+    .memory-head strong { color: #f6ddd1; font-weight: 400; }
+
+    .memory-close {
+      width: 36px;
+      height: 36px;
+      border: 1px solid rgb(255 249 243 / 48%);
+      border-radius: 50%;
+      background: rgb(45 37 67 / 30%);
+      color: #fff9f3;
+      cursor: pointer;
+      font-size: 21px;
+      line-height: 1;
+      transition: background 180ms ease, color 180ms ease, transform 180ms ease;
+    }
+
+    .memory-close:hover { transform: rotate(8deg); background: rgb(255 249 243 / 17%); color: #f6ddd1; }
+    .memory-close:focus-visible, .memory-replay:focus-visible { outline: 2px solid #f2d6ce; outline-offset: 4px; }
+
+    .memory-caption {
+      position: absolute;
+      z-index: 2;
+      right: 24px;
+      bottom: 23px;
+      left: 24px;
+      color: rgb(255 249 243 / 88%);
+      font-family: "Winter Letter", "Hiragino Sans GB", sans-serif;
+      font-size: clamp(22px, 3vw, 36px);
+      line-height: 1.55;
+      text-align: center;
+      text-shadow: 0 3px 16px rgb(50 42 71 / 38%);
+    }
+
+    .memory-replay {
+      position: absolute;
+      z-index: 2;
+      top: 78px;
+      right: 24px;
+      min-height: 36px;
+      padding: 0 12px;
+      border: 1px solid rgb(255 249 243 / 44%);
+      background: rgb(45 37 67 / 22%);
+      color: rgb(255 249 243 / 82%);
+      cursor: pointer;
+      font-size: 11px;
+      letter-spacing: 1px;
+    }
+
+    .memory-progress {
+      position: absolute;
+      z-index: 2;
+      right: 24px;
+      bottom: 22px;
+      left: 24px;
+      height: 2px;
+      overflow: hidden;
+      background: rgb(255 249 243 / 22%);
+    }
+
+    .memory-progress span { display: block; width: 0; height: 100%; background: #f2d6ce; transform-origin: left center; }
 
     .toast {
       position: fixed;
@@ -815,6 +966,8 @@
 
       .light-button { min-height: 46px; padding-inline: 15px; font-size: 14px; }
 
+      .memory-link { min-height: 46px; padding-inline: 14px; font-size: 14px; }
+
       .text-link { font-size: 14px; }
 
       .hero::after {
@@ -845,6 +998,13 @@
       .page-controls { gap: 10px; }
       .page-button { min-width: 96px; min-height: 42px; font-size: 13px; }
       .page-hint { display: none; }
+
+      .memory-modal { padding: 0; }
+      .memory-shell { width: 100%; height: 100%; border: 0; }
+      .memory-head { top: 18px; left: 18px; right: 18px; letter-spacing: 1px; }
+      .memory-replay { top: 68px; right: 18px; }
+      .memory-caption { right: 18px; bottom: 25px; left: 18px; font-size: 25px; }
+      .memory-progress { right: 18px; bottom: 18px; left: 18px; }
     }
 
     @media (max-width: 390px) {
@@ -864,6 +1024,7 @@
       .mail-stage.is-opening .envelope,
       .mail-stage.is-opening .envelope-shadow,
       .reading-page.is-active { animation: none; }
+      .memory-link:hover, .memory-close:hover { transform: none; }
     }
   </style>
 </head>
@@ -890,12 +1051,16 @@
             <span class="light-label">点亮这棵树</span>
           </button>
           <a class="text-link" id="open-letter" href="#letter">拆开这封信 <span aria-hidden="true">↘</span></a>
+          <button class="memory-link" id="open-memory" type="button">
+            <span class="memory-link-mark" aria-hidden="true">✦</span>
+            <span>看一段小小的旧时光</span>
+          </button>
         </div>
       </div>
 
     </section>
 
-    <section class="letter" id="letter" aria-labelledby="letter-title">
+    <section class="letter" id="letter" aria-labelledby="letter-title" hidden>
       <div class="letter-inner">
         <h2 id="letter-title">愿你被喜欢的事物包围，<br>也总能遇见温柔的人。</h2>
         <p class="letter-copy">愿忙碌的日子里，有值得期待的小事；愿每个平凡的清晨，都能遇见一点好消息。新的一年，愿你心里有光，脚下有路，身边有惦记你的人。</p>
@@ -908,6 +1073,21 @@
   </main>
   <footer class="footer">圣诞快乐，夏鸣。</footer>
   <div class="toast" role="status" aria-live="polite"></div>
+
+  <div class="memory-modal" id="memory-modal" hidden aria-hidden="true">
+    <div class="memory-backdrop" data-close-memory></div>
+    <div class="memory-shell" role="dialog" aria-modal="true" aria-labelledby="memory-title">
+      <canvas class="memory-canvas" data-memory-canvas aria-hidden="true"></canvas>
+      <div class="memory-vignette" aria-hidden="true"></div>
+      <div class="memory-head">
+        <span id="memory-title">江小唐 × 夏鸣 · 一段小小的旧时光</span>
+        <button class="memory-close" type="button" data-close-memory aria-label="关闭小小的旧时光" title="关闭">×</button>
+      </div>
+      <button class="memory-replay" type="button" data-replay-memory>再看一遍</button>
+      <p class="memory-caption" data-memory-caption>有些陪伴，从很小的时候就开始了。</p>
+      <div class="memory-progress" aria-hidden="true"><span data-memory-progress></span></div>
+    </div>
+  </div>
 
   <div class="reading-modal" id="reading-modal" hidden aria-hidden="true">
     <div class="modal-backdrop" data-close-letter></div>
@@ -978,7 +1158,15 @@
       const shareButton = document.querySelector(".share-button");
       const toast = document.querySelector(".toast");
       const openLetterLink = document.querySelector("#open-letter");
+      const openMemoryButton = document.querySelector("#open-memory");
       const readingModal = document.querySelector("#reading-modal");
+      const memoryModal = document.querySelector("#memory-modal");
+      const memoryShell = document.querySelector(".memory-shell");
+      const memoryCanvas = document.querySelector("[data-memory-canvas]");
+      const memoryCtx = memoryCanvas.getContext("2d");
+      const memoryCaption = document.querySelector("[data-memory-caption]");
+      const memoryProgress = document.querySelector("[data-memory-progress]");
+      const replayMemory = document.querySelector("[data-replay-memory]");
       const mailStage = document.querySelector("[data-mail-stage]");
       const pageViewer = document.querySelector("[data-page-viewer]");
       const pages = [...document.querySelectorAll(".reading-page")];
@@ -1000,6 +1188,12 @@
       let currentPage = 0;
       let openingTimer = 0;
       let lastFocusedElement = null;
+      let memoryLastFocusedElement = null;
+      let memoryFrame = 0;
+      let memoryStartedAt = 0;
+      let memoryWidth = 0;
+      let memoryHeight = 0;
+      let memoryPlaying = false;
 
       function seededRandom(seed) {
         let value = seed;
@@ -1419,6 +1613,275 @@
         nextPage.disabled = currentPage === pages.length - 1;
       }
 
+      const memoryScenes = [
+        { caption: "有些陪伴，从很小的时候就开始了。", sky: ["#a8b6cc", "#c5ced9"], ground: "#d5d8d3" },
+        { caption: "你们一起追过风，也把小小的愿望交给星星。", sky: ["#9fb9c6", "#d6d7d1"], ground: "#dfe1d8" },
+        { caption: "难过的时候，一个拥抱也可以变成一盏灯。", sky: ["#aaa4c0", "#d6c7cc"], ground: "#d7d2d3" },
+        { caption: "后来你们都长大了，还是会在彼此需要时轻轻靠近。", sky: ["#777d9f", "#b8b0c5"], ground: "#c7c8cf" }
+      ];
+
+      function memoryRoundRect(context, x, y, w, h, r) {
+        if (typeof context.roundRect === "function") {
+          context.beginPath();
+          context.roundRect(x, y, w, h, r);
+          return;
+        }
+        context.beginPath();
+        context.moveTo(x + r, y);
+        context.arcTo(x + w, y, x + w, y + h, r);
+        context.arcTo(x + w, y + h, x, y + h, r);
+        context.arcTo(x, y + h, x, y, r);
+        context.arcTo(x, y, x + w, y, r);
+        context.closePath();
+      }
+
+      function memoryPath(points, fill) {
+        memoryCtx.beginPath();
+        memoryCtx.moveTo(points[0][0], points[0][1]);
+        for (let i = 1; i < points.length; i += 1) memoryCtx.lineTo(points[i][0], points[i][1]);
+        memoryCtx.closePath();
+        memoryCtx.fillStyle = fill;
+        memoryCtx.fill();
+      }
+
+      function memoryResize() {
+        const bounds = memoryShell.getBoundingClientRect();
+        memoryWidth = bounds.width;
+        memoryHeight = bounds.height;
+        const ratio = Math.min(window.devicePixelRatio || 1, 2);
+        memoryCanvas.width = Math.floor(memoryWidth * ratio);
+        memoryCanvas.height = Math.floor(memoryHeight * ratio);
+        memoryCanvas.style.width = `${memoryWidth}px`;
+        memoryCanvas.style.height = `${memoryHeight}px`;
+        memoryCtx.setTransform(ratio, 0, 0, ratio, 0, 0);
+      }
+
+      function memoryEase(value) {
+        return value < .5 ? 2 * value * value : 1 - Math.pow(-2 * value + 2, 2) / 2;
+      }
+
+      function drawMemoryStars(time, night) {
+        const stars = [
+          [.12, .18, 2], [.22, .28, 1], [.34, .13, 1.5], [.49, .23, 1], [.62, .14, 1.3], [.75, .27, 1.5], [.86, .17, 1], [.91, .37, 1.2]
+        ];
+        memoryCtx.save();
+        stars.forEach(([sx, sy, radius], index) => {
+          const pulse = .48 + Math.sin(time * .0012 + index * 1.4) * .24;
+          memoryCtx.globalAlpha = night ? pulse : pulse * .38;
+          memoryCtx.fillStyle = index % 3 === 0 ? "#f5dfbd" : "#fff8ed";
+          memoryCtx.beginPath();
+          memoryCtx.arc(memoryWidth * sx, memoryHeight * sy, radius, 0, Math.PI * 2);
+          memoryCtx.fill();
+        });
+        memoryCtx.restore();
+      }
+
+      function drawMemoryGround(scene) {
+        const horizon = memoryHeight * .72;
+        memoryCtx.fillStyle = scene.ground;
+        memoryCtx.beginPath();
+        memoryCtx.moveTo(0, horizon);
+        memoryCtx.quadraticCurveTo(memoryWidth * .24, horizon - 30, memoryWidth * .47, horizon + 8);
+        memoryCtx.quadraticCurveTo(memoryWidth * .76, horizon + 35, memoryWidth, horizon - 10);
+        memoryCtx.lineTo(memoryWidth, memoryHeight);
+        memoryCtx.lineTo(0, memoryHeight);
+        memoryCtx.closePath();
+        memoryCtx.fill();
+        memoryCtx.fillStyle = "rgb(255 255 255 / 26%)";
+        memoryCtx.beginPath();
+        memoryCtx.ellipse(memoryWidth * .68, memoryHeight * .82, memoryWidth * .18, 9, -.05, 0, Math.PI * 2);
+        memoryCtx.fill();
+      }
+
+      function drawMemoryTree(x, y, scale, glow) {
+        memoryCtx.save();
+        memoryCtx.translate(x, y);
+        memoryCtx.scale(scale, scale);
+        if (glow) {
+          memoryCtx.shadowColor = "rgb(252 222 181 / 70%)";
+          memoryCtx.shadowBlur = 22;
+        }
+        [
+          [[0, -150], [-70, -44], [70, -44]],
+          [[0, -110], [-88, -2], [88, -2]],
+          [[0, -72], [-108, 38], [108, 38]]
+        ].forEach((triangle, index) => memoryPath(triangle, index === 0 ? "#6f8890" : index === 1 ? "#668079" : "#5c756e"));
+        memoryCtx.shadowBlur = 0;
+        memoryCtx.fillStyle = "#705b58";
+        memoryCtx.fillRect(-11, 25, 22, 39);
+        if (glow) {
+          memoryCtx.fillStyle = "#f8dfb2";
+          [[-47, -31], [24, -4], [-12, 30], [58, 28]].forEach(([ox, oy]) => {
+            memoryCtx.beginPath();
+            memoryCtx.arc(ox, oy, 4, 0, Math.PI * 2);
+            memoryCtx.fill();
+          });
+        }
+        memoryCtx.restore();
+      }
+
+      function drawMemoryGirl(x, y, scale, mood, walking) {
+        memoryCtx.save();
+        memoryCtx.translate(x, y);
+        memoryCtx.scale(scale, scale);
+        const sway = walking ? Math.sin(performance.now() * .004) * 4 : 0;
+        memoryCtx.strokeStyle = "#5f5367";
+        memoryCtx.lineWidth = 5;
+        memoryCtx.lineCap = "round";
+        memoryCtx.beginPath();
+        memoryCtx.moveTo(-11, 56);
+        memoryCtx.lineTo(-17 + sway, 91);
+        memoryCtx.moveTo(11, 56);
+        memoryCtx.lineTo(18 - sway, 91);
+        memoryCtx.stroke();
+        memoryCtx.fillStyle = mood === "sad" ? "#b98393" : "#d49aa1";
+        memoryCtx.beginPath();
+        memoryCtx.ellipse(0, 35, 36, 48, 0, 0, Math.PI * 2);
+        memoryCtx.fill();
+        memoryCtx.fillStyle = "#5f5367";
+        memoryCtx.beginPath();
+        memoryCtx.arc(0, -25, 31, 0, Math.PI * 2);
+        memoryCtx.fill();
+        memoryCtx.fillStyle = "#f2d4c1";
+        memoryCtx.beginPath();
+        memoryCtx.arc(0, -21, 25, 0, Math.PI * 2);
+        memoryCtx.fill();
+        memoryCtx.fillStyle = "#5f5367";
+        memoryCtx.beginPath();
+        memoryCtx.arc(-18, -24, 17, 1.2, 5.2);
+        memoryCtx.fill();
+        memoryCtx.fillStyle = "#594b5f";
+        memoryCtx.beginPath();
+        memoryCtx.arc(-9, -20, 2.4, 0, Math.PI * 2);
+        memoryCtx.arc(9, -20, 2.4, 0, Math.PI * 2);
+        memoryCtx.fill();
+        memoryCtx.strokeStyle = mood === "sad" ? "#8d6674" : "#a05e72";
+        memoryCtx.lineWidth = 2;
+        memoryCtx.beginPath();
+        if (mood === "sad") {
+          memoryCtx.arc(0, -10, 7, Math.PI * 1.1, Math.PI * 1.9);
+        } else {
+          memoryCtx.arc(0, -11, 7, .2, Math.PI - .2);
+        }
+        memoryCtx.stroke();
+        memoryCtx.restore();
+      }
+
+      function drawMemoryBottle(x, y, scale, glow, bob) {
+        memoryCtx.save();
+        memoryCtx.translate(x, y + bob);
+        memoryCtx.scale(scale, scale);
+        if (glow) {
+          memoryCtx.shadowColor = "rgb(237 219 179 / 82%)";
+          memoryCtx.shadowBlur = 26;
+        }
+        memoryCtx.fillStyle = "#accbd0";
+        memoryRoundRect(memoryCtx, -23, -50, 46, 72, 13);
+        memoryCtx.fill();
+        memoryCtx.fillStyle = "#89afb7";
+        memoryRoundRect(memoryCtx, -13, -70, 26, 24, 7);
+        memoryCtx.fill();
+        memoryCtx.fillStyle = "#f3e5cf";
+        memoryRoundRect(memoryCtx, -18, -15, 36, 25, 8);
+        memoryCtx.fill();
+        memoryCtx.strokeStyle = "#7798a0";
+        memoryCtx.lineWidth = 2;
+        memoryCtx.beginPath();
+        memoryCtx.moveTo(-12, -2);
+        memoryCtx.quadraticCurveTo(0, -11, 12, -2);
+        memoryCtx.quadraticCurveTo(0, 7, -12, -2);
+        memoryCtx.stroke();
+        memoryCtx.beginPath();
+        memoryCtx.moveTo(-12, 6);
+        memoryCtx.quadraticCurveTo(0, -3, 12, 6);
+        memoryCtx.stroke();
+        memoryCtx.shadowBlur = 0;
+        memoryCtx.restore();
+      }
+
+      function drawMemoryScene(time, sceneIndex, sceneProgress) {
+        const scene = memoryScenes[sceneIndex];
+        const sky = memoryCtx.createLinearGradient(0, 0, 0, memoryHeight);
+        sky.addColorStop(0, scene.sky[0]);
+        sky.addColorStop(1, scene.sky[1]);
+        memoryCtx.fillStyle = sky;
+        memoryCtx.fillRect(0, 0, memoryWidth, memoryHeight);
+        drawMemoryStars(time, sceneIndex === 3);
+        drawMemoryGround(scene);
+        const walking = sceneIndex === 1;
+        const age = sceneIndex === 0 ? .72 : sceneIndex === 1 ? .82 : sceneIndex === 2 ? 1.02 : 1.26;
+        const girlX = sceneIndex < 2 ? memoryWidth * (.34 + sceneProgress * .11) : memoryWidth * .44;
+        const girlY = memoryHeight * (.67 + (walking ? Math.sin(sceneProgress * Math.PI * 2) * .02 : 0));
+        const bottleX = sceneIndex === 0 ? memoryWidth * .59 : sceneIndex === 1 ? memoryWidth * (.5 + sceneProgress * .14) : memoryWidth * .58;
+        const bottleY = memoryHeight * (sceneIndex === 3 ? .62 : .67);
+        if (sceneIndex === 2) drawMemoryTree(memoryWidth * .78, memoryHeight * .74, .72, true);
+        if (sceneIndex === 3) drawMemoryTree(memoryWidth * .76, memoryHeight * .74, .8, true);
+        drawMemoryGirl(girlX, girlY, age, sceneIndex === 2 ? "sad" : "happy", walking);
+        drawMemoryBottle(bottleX, bottleY, sceneIndex === 3 ? 1.12 : .8, sceneIndex >= 2, Math.sin(time * .004) * 4);
+        if (sceneIndex === 1) {
+          memoryCtx.save();
+          memoryCtx.globalAlpha = .62 + sceneProgress * .2;
+          memoryCtx.strokeStyle = "#f5dfbd";
+          memoryCtx.lineWidth = 3;
+          memoryCtx.beginPath();
+          memoryCtx.arc(memoryWidth * .56, memoryHeight * .45, 42 + sceneProgress * 20, .4, 2.1);
+          memoryCtx.stroke();
+          memoryCtx.restore();
+        }
+        if (sceneIndex >= 2) {
+          memoryCtx.save();
+          memoryCtx.globalAlpha = .25 + Math.sin(time * .003) * .08;
+          memoryCtx.strokeStyle = "#f6ddd1";
+          memoryCtx.lineWidth = 2;
+          memoryCtx.beginPath();
+          memoryCtx.moveTo(girlX + 22 * age, girlY - 23 * age);
+          memoryCtx.quadraticCurveTo(memoryWidth * .52, memoryHeight * .47, bottleX - 16, bottleY - 22);
+          memoryCtx.stroke();
+          memoryCtx.restore();
+        }
+      }
+
+      function renderMemoryFrame(timestamp) {
+        if (!memoryWidth || !memoryHeight) memoryResize();
+        const duration = 18000;
+        const elapsed = reducedMotion.matches ? 15000 : Math.max(0, timestamp - memoryStartedAt);
+        const progress = Math.min(elapsed / duration, 1);
+        const loopProgress = progress % 1;
+        const sceneFloat = loopProgress * memoryScenes.length;
+        const sceneIndex = Math.min(memoryScenes.length - 1, Math.floor(sceneFloat));
+        const sceneProgress = sceneFloat - sceneIndex;
+        drawMemoryScene(timestamp, sceneIndex, memoryEase(sceneProgress));
+        memoryCaption.textContent = memoryScenes[sceneIndex].caption;
+        memoryProgress.style.width = `${loopProgress * 100}%`;
+        if (memoryPlaying && !reducedMotion.matches && !document.hidden) memoryFrame = window.requestAnimationFrame(renderMemoryFrame);
+      }
+
+      function startMemory() {
+        window.cancelAnimationFrame(memoryFrame);
+        memoryResize();
+        memoryStartedAt = performance.now();
+        memoryPlaying = true;
+        memoryFrame = window.requestAnimationFrame(renderMemoryFrame);
+      }
+
+      function openMemory() {
+        memoryLastFocusedElement = document.activeElement;
+        memoryModal.hidden = false;
+        memoryModal.setAttribute("aria-hidden", "false");
+        document.body.classList.add("modal-open");
+        startMemory();
+        replayMemory.focus({ preventScroll: true });
+      }
+
+      function closeMemory() {
+        memoryPlaying = false;
+        window.cancelAnimationFrame(memoryFrame);
+        memoryModal.hidden = true;
+        memoryModal.setAttribute("aria-hidden", "true");
+        document.body.classList.remove("modal-open");
+        if (memoryLastFocusedElement && typeof memoryLastFocusedElement.focus === "function") memoryLastFocusedElement.focus({ preventScroll: true });
+      }
+
       function showPages() {
         window.clearTimeout(openingTimer);
         mailStage.classList.remove("is-opening");
@@ -1454,11 +1917,18 @@
       }
 
       openLetterLink.addEventListener("click", openReading);
+      openMemoryButton.addEventListener("click", openMemory);
+      replayMemory.addEventListener("click", startMemory);
       closeLetter.addEventListener("click", closeReading);
       document.querySelector("[data-close-letter]").addEventListener("click", closeReading);
+      document.querySelectorAll("[data-close-memory]").forEach((element) => element.addEventListener("click", closeMemory));
       previousPage.addEventListener("click", () => setPage(currentPage - 1));
       nextPage.addEventListener("click", () => setPage(currentPage + 1));
       document.addEventListener("keydown", (event) => {
+        if (!memoryModal.hidden && event.key === "Escape") {
+          closeMemory();
+          return;
+        }
         if (readingModal.hidden) return;
         if (event.key === "Escape") closeReading();
         if (pageViewer.hidden) return;
@@ -1571,7 +2041,10 @@
         }
       });
 
-      window.addEventListener("resize", resize, { passive: true });
+      window.addEventListener("resize", () => {
+        resize();
+        if (!memoryModal.hidden) memoryResize();
+      }, { passive: true });
       new IntersectionObserver(([entry]) => {
         sceneVisible = entry.isIntersecting;
         if (frame) window.cancelAnimationFrame(frame);
@@ -1579,11 +2052,17 @@
       }).observe(hero);
       document.addEventListener("visibilitychange", () => {
         if (frame) window.cancelAnimationFrame(frame);
+        if (memoryFrame) window.cancelAnimationFrame(memoryFrame);
         if (!document.hidden && sceneVisible && !reducedMotion.matches) frame = window.requestAnimationFrame(animate);
+        if (!document.hidden && memoryPlaying && !reducedMotion.matches) memoryFrame = window.requestAnimationFrame(renderMemoryFrame);
       });
       reducedMotion.addEventListener("change", () => {
         if (frame) window.cancelAnimationFrame(frame);
         frame = window.requestAnimationFrame(animate);
+        if (!memoryModal.hidden) {
+          window.cancelAnimationFrame(memoryFrame);
+          memoryFrame = window.requestAnimationFrame(renderMemoryFrame);
+        }
       });
       resize();
       if (!reducedMotion.matches) frame = window.requestAnimationFrame(animate);
