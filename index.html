@@ -1724,46 +1724,105 @@
         memoryCtx.save();
         memoryCtx.translate(x, y);
         memoryCtx.scale(scale, scale);
-        const sway = walking ? Math.sin(performance.now() * .004) * 4 : 0;
-        memoryCtx.strokeStyle = "#5f5367";
+        const sway = walking ? Math.sin(performance.now() * .004) * 5 : 0;
+        const dress = mood === "sad" ? "#bb8999" : "#d49aa1";
+        const hair = "#62536c";
+        const skin = "#f6d9c6";
+
+        memoryCtx.fillStyle = "rgb(89 73 91 / 18%)";
+        memoryCtx.beginPath();
+        memoryCtx.ellipse(0, 96, 36, 8, 0, 0, Math.PI * 2);
+        memoryCtx.fill();
+
+        memoryCtx.strokeStyle = "#5c5267";
         memoryCtx.lineWidth = 5;
         memoryCtx.lineCap = "round";
         memoryCtx.beginPath();
-        memoryCtx.moveTo(-11, 56);
-        memoryCtx.lineTo(-17 + sway, 91);
-        memoryCtx.moveTo(11, 56);
-        memoryCtx.lineTo(18 - sway, 91);
+        memoryCtx.moveTo(-10, 61);
+        memoryCtx.lineTo(-15 + sway, 92);
+        memoryCtx.moveTo(10, 61);
+        memoryCtx.lineTo(16 - sway, 92);
         memoryCtx.stroke();
-        memoryCtx.fillStyle = mood === "sad" ? "#b98393" : "#d49aa1";
+        memoryCtx.fillStyle = "#6e5f73";
+        memoryRoundRect(memoryCtx, -22 + sway, 86, 16, 8, 4); memoryCtx.fill();
+        memoryRoundRect(memoryCtx, 6 - sway, 86, 16, 8, 4); memoryCtx.fill();
+
+        memoryCtx.fillStyle = dress;
         memoryCtx.beginPath();
-        memoryCtx.ellipse(0, 35, 36, 48, 0, 0, Math.PI * 2);
+        memoryCtx.moveTo(-22, 5);
+        memoryCtx.quadraticCurveTo(-39, 38, -43, 65);
+        memoryCtx.quadraticCurveTo(0, 86, 43, 65);
+        memoryCtx.quadraticCurveTo(39, 38, 22, 5);
+        memoryCtx.closePath();
         memoryCtx.fill();
-        memoryCtx.fillStyle = "#5f5367";
+        memoryCtx.fillStyle = "#f3d7ca";
         memoryCtx.beginPath();
-        memoryCtx.arc(0, -25, 31, 0, Math.PI * 2);
+        memoryCtx.moveTo(-12, 3); memoryCtx.lineTo(0, 17); memoryCtx.lineTo(12, 3); memoryCtx.lineTo(8, 30); memoryCtx.lineTo(-8, 30); memoryCtx.closePath(); memoryCtx.fill();
+        memoryCtx.fillStyle = "rgb(255 246 240 / 35%)";
+        memoryCtx.fillRect(-32, 55, 64, 4);
+
+        memoryCtx.strokeStyle = skin;
+        memoryCtx.lineWidth = 8;
+        memoryCtx.beginPath();
+        memoryCtx.moveTo(-28, 22);
+        memoryCtx.quadraticCurveTo(-45, 33 + sway, -48, 50 + sway);
+        memoryCtx.moveTo(28, 22);
+        memoryCtx.quadraticCurveTo(45, 33 - sway, 48, 50 - sway);
+        memoryCtx.stroke();
+
+        memoryCtx.fillStyle = hair;
+        memoryCtx.beginPath();
+        memoryCtx.arc(0, -25, 35, 0, Math.PI * 2);
         memoryCtx.fill();
-        memoryCtx.fillStyle = "#f2d4c1";
+        memoryCtx.fillStyle = skin;
         memoryCtx.beginPath();
-        memoryCtx.arc(0, -21, 25, 0, Math.PI * 2);
+        memoryCtx.ellipse(0, -20, 27, 30, 0, 0, Math.PI * 2);
         memoryCtx.fill();
-        memoryCtx.fillStyle = "#5f5367";
+        memoryCtx.fillStyle = hair;
         memoryCtx.beginPath();
-        memoryCtx.arc(-18, -24, 17, 1.2, 5.2);
+        memoryCtx.moveTo(-32, -28);
+        memoryCtx.quadraticCurveTo(-24, -58, 4, -57);
+        memoryCtx.quadraticCurveTo(33, -54, 34, -18);
+        memoryCtx.quadraticCurveTo(16, -32, 4, -16);
+        memoryCtx.quadraticCurveTo(-5, -29, -17, -12);
+        memoryCtx.quadraticCurveTo(-23, 1, -31, 9);
+        memoryCtx.closePath();
         memoryCtx.fill();
-        memoryCtx.fillStyle = "#594b5f";
+        memoryCtx.fillStyle = "#e4a8a7";
         memoryCtx.beginPath();
-        memoryCtx.arc(-9, -20, 2.4, 0, Math.PI * 2);
-        memoryCtx.arc(9, -20, 2.4, 0, Math.PI * 2);
+        memoryCtx.arc(25, -48, 8, 0, Math.PI * 2);
+        memoryCtx.arc(32, -46, 8, 0, Math.PI * 2);
         memoryCtx.fill();
-        memoryCtx.strokeStyle = mood === "sad" ? "#8d6674" : "#a05e72";
-        memoryCtx.lineWidth = 2;
+
+        memoryCtx.fillStyle = "#54495e";
         memoryCtx.beginPath();
+        memoryCtx.ellipse(-10, -20, 4.2, 6.8, 0, 0, Math.PI * 2);
+        memoryCtx.ellipse(10, -20, 4.2, 6.8, 0, 0, Math.PI * 2);
+        memoryCtx.fill();
+        memoryCtx.fillStyle = "#fffdf6";
+        memoryCtx.beginPath();
+        memoryCtx.arc(-11, -23, 1.9, 0, Math.PI * 2);
+        memoryCtx.arc(9, -23, 1.9, 0, Math.PI * 2);
+        memoryCtx.fill();
+        memoryCtx.fillStyle = "rgb(215 123 139 / 34%)";
+        memoryCtx.beginPath();
+        memoryCtx.ellipse(-20, -7, 7, 3.3, 0, 0, Math.PI * 2);
+        memoryCtx.ellipse(20, -7, 7, 3.3, 0, 0, Math.PI * 2);
+        memoryCtx.fill();
+        memoryCtx.strokeStyle = mood === "sad" ? "#986a7b" : "#9c5e72";
+        memoryCtx.lineWidth = 2.2;
+        memoryCtx.beginPath();
+        if (mood === "sad") memoryCtx.arc(0, -2, 7, Math.PI * 1.12, Math.PI * 1.88);
+        else memoryCtx.arc(0, -5, 7, .2, Math.PI - .2);
+        memoryCtx.stroke();
         if (mood === "sad") {
-          memoryCtx.arc(0, -10, 7, Math.PI * 1.1, Math.PI * 1.9);
-        } else {
-          memoryCtx.arc(0, -11, 7, .2, Math.PI - .2);
+          memoryCtx.strokeStyle = "#9fc8d1";
+          memoryCtx.lineWidth = 2;
+          memoryCtx.beginPath();
+          memoryCtx.moveTo(-12, -1); memoryCtx.quadraticCurveTo(-15, 8, -10, 11);
+          memoryCtx.moveTo(12, -1); memoryCtx.quadraticCurveTo(15, 8, 10, 11);
+          memoryCtx.stroke();
         }
-        memoryCtx.stroke();
         memoryCtx.restore();
       }
 
@@ -1771,31 +1830,58 @@
         memoryCtx.save();
         memoryCtx.translate(x, y + bob);
         memoryCtx.scale(scale, scale);
+        memoryCtx.fillStyle = "rgb(73 77 105 / 20%)";
+        memoryCtx.beginPath();
+        memoryCtx.ellipse(0, 29, 28, 7, 0, 0, Math.PI * 2);
+        memoryCtx.fill();
         if (glow) {
-          memoryCtx.shadowColor = "rgb(237 219 179 / 82%)";
-          memoryCtx.shadowBlur = 26;
+          const halo = memoryCtx.createRadialGradient(0, -14, 4, 0, -14, 72);
+          halo.addColorStop(0, "rgb(246 223 183 / 34%)");
+          halo.addColorStop(1, "rgb(246 223 183 / 0%)");
+          memoryCtx.fillStyle = halo;
+          memoryCtx.beginPath();
+          memoryCtx.arc(0, -14, 72, 0, Math.PI * 2);
+          memoryCtx.fill();
         }
-        memoryCtx.fillStyle = "#accbd0";
-        memoryRoundRect(memoryCtx, -23, -50, 46, 72, 13);
+        const glass = memoryCtx.createLinearGradient(-24, -58, 25, 26);
+        glass.addColorStop(0, "#d7eff0");
+        glass.addColorStop(.45, "#a7d3d5");
+        glass.addColorStop(1, "#76a9b4");
+        memoryCtx.fillStyle = glass;
+        memoryCtx.beginPath();
+        memoryCtx.moveTo(-16, -49); memoryCtx.lineTo(-13, -66); memoryCtx.quadraticCurveTo(0, -73, 13, -66); memoryCtx.lineTo(16, -49);
+        memoryCtx.quadraticCurveTo(27, -39, 26, -18); memoryCtx.lineTo(24, 17); memoryCtx.quadraticCurveTo(0, 33, -24, 17); memoryCtx.lineTo(-26, -18); memoryCtx.quadraticCurveTo(-27, -39, -16, -49); memoryCtx.closePath();
         memoryCtx.fill();
-        memoryCtx.fillStyle = "#89afb7";
-        memoryRoundRect(memoryCtx, -13, -70, 26, 24, 7);
-        memoryCtx.fill();
-        memoryCtx.fillStyle = "#f3e5cf";
-        memoryRoundRect(memoryCtx, -18, -15, 36, 25, 8);
-        memoryCtx.fill();
-        memoryCtx.strokeStyle = "#7798a0";
+        memoryCtx.strokeStyle = "rgb(241 255 251 / 68%)";
         memoryCtx.lineWidth = 2;
+        memoryCtx.stroke();
+        memoryCtx.fillStyle = "#86adb7";
+        memoryRoundRect(memoryCtx, -13, -82, 26, 18, 6); memoryCtx.fill();
+        memoryCtx.fillStyle = "#f0d9b5";
+        memoryRoundRect(memoryCtx, -10, -85, 20, 7, 3); memoryCtx.fill();
+        memoryCtx.fillStyle = "rgb(249 247 227 / 88%)";
+        memoryRoundRect(memoryCtx, -20, -19, 40, 30, 9); memoryCtx.fill();
+        memoryCtx.fillStyle = "rgb(122 171 179 / 28%)";
+        memoryCtx.fillRect(-20, 0, 40, 11);
+        memoryCtx.strokeStyle = "#739ca7";
+        memoryCtx.lineWidth = 2.4;
         memoryCtx.beginPath();
-        memoryCtx.moveTo(-12, -2);
-        memoryCtx.quadraticCurveTo(0, -11, 12, -2);
-        memoryCtx.quadraticCurveTo(0, 7, -12, -2);
+        memoryCtx.moveTo(-13, -5);
+        memoryCtx.quadraticCurveTo(0, -15, 13, -5);
+        memoryCtx.quadraticCurveTo(0, 5, -13, -5);
         memoryCtx.stroke();
         memoryCtx.beginPath();
-        memoryCtx.moveTo(-12, 6);
-        memoryCtx.quadraticCurveTo(0, -3, 12, 6);
+        memoryCtx.moveTo(-13, 5);
+        memoryCtx.quadraticCurveTo(0, -5, 13, 5);
         memoryCtx.stroke();
-        memoryCtx.shadowBlur = 0;
+        memoryCtx.fillStyle = "#e6bd80";
+        [[-8, -8], [8, -9], [0, 11]].forEach(([sx, sy]) => {
+          memoryCtx.beginPath(); memoryCtx.arc(sx, sy, 1.6, 0, Math.PI * 2); memoryCtx.fill();
+        });
+        memoryCtx.fillStyle = "rgb(255 255 255 / 54%)";
+        memoryCtx.beginPath();
+        memoryCtx.ellipse(-15, -34, 3, 14, -.18, 0, Math.PI * 2);
+        memoryCtx.fill();
         memoryCtx.restore();
       }
 
@@ -1845,15 +1931,14 @@
         if (!memoryWidth || !memoryHeight) memoryResize();
         const duration = 18000;
         const elapsed = reducedMotion.matches ? 15000 : Math.max(0, timestamp - memoryStartedAt);
-        const progress = Math.min(elapsed / duration, 1);
-        const loopProgress = progress % 1;
+        const loopProgress = (elapsed / duration) % 1;
         const sceneFloat = loopProgress * memoryScenes.length;
         const sceneIndex = Math.min(memoryScenes.length - 1, Math.floor(sceneFloat));
         const sceneProgress = sceneFloat - sceneIndex;
         drawMemoryScene(timestamp, sceneIndex, memoryEase(sceneProgress));
         memoryCaption.textContent = memoryScenes[sceneIndex].caption;
         memoryProgress.style.width = `${loopProgress * 100}%`;
-        if (memoryPlaying && !reducedMotion.matches && !document.hidden) memoryFrame = window.requestAnimationFrame(renderMemoryFrame);
+        if (memoryPlaying && !reducedMotion.matches) memoryFrame = window.requestAnimationFrame(renderMemoryFrame);
       }
 
       function startMemory() {
