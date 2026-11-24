@@ -460,6 +460,20 @@
       box-shadow: 0 30px 100px rgb(34 29 48 / 45%), inset 0 1px 0 rgb(255 255 255 / 22%);
     }
 
+    .memory-shell::before, .memory-shell::after {
+      position: absolute;
+      z-index: 3;
+      right: 0;
+      left: 0;
+      height: 18px;
+      background: rgb(28 25 43 / 54%);
+      content: "";
+      pointer-events: none;
+    }
+
+    .memory-shell::before { top: 0; }
+    .memory-shell::after { bottom: 0; }
+
     .memory-canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
 
     .memory-vignette {
@@ -1614,10 +1628,12 @@
       }
 
       const memoryScenes = [
-        { caption: "有些陪伴，从很小的时候就开始了。", sky: ["#a8b6cc", "#c5ced9"], ground: "#d5d8d3" },
-        { caption: "你们一起追过风，也把小小的愿望交给星星。", sky: ["#9fb9c6", "#d6d7d1"], ground: "#dfe1d8" },
-        { caption: "难过的时候，一个拥抱也可以变成一盏灯。", sky: ["#aaa4c0", "#d6c7cc"], ground: "#d7d2d3" },
-        { caption: "后来你们都长大了，还是会在彼此需要时轻轻靠近。", sky: ["#777d9f", "#b8b0c5"], ground: "#c7c8cf" }
+        { caption: "有些陪伴，从很小的时候就开始了。", sky: ["#a8b6cc", "#c5ced9"], ground: "#d5d8d3", mood: "dawn" },
+        { caption: "那天，她在雪地里捡到一颗会发光的小水瓶。", sky: ["#9fb9c6", "#d6d7d1"], ground: "#dfe1d8", mood: "meet" },
+        { caption: "他们一起追过风，也把小小的愿望交给星星。", sky: ["#91aebc", "#cbd6d4"], ground: "#dfe1d8", mood: "play" },
+        { caption: "长大以后，世界偶尔也会下很大的雨。", sky: ["#868aa8", "#b8b4c8"], ground: "#cccbd2", mood: "rain" },
+        { caption: "还好，一个拥抱可以把另一颗心重新点亮。", sky: ["#7c789c", "#b0a7be"], ground: "#c8c7d0", mood: "comfort" },
+        { caption: "后来你们都长大了，还是会在彼此需要时轻轻靠近。", sky: ["#656a91", "#a39bb9"], ground: "#c1c4cd", mood: "return" }
       ];
 
       function memoryRoundRect(context, x, y, w, h, r) {
@@ -1673,6 +1689,122 @@
           memoryCtx.arc(memoryWidth * sx, memoryHeight * sy, radius, 0, Math.PI * 2);
           memoryCtx.fill();
         });
+        memoryCtx.restore();
+      }
+
+      function drawMemoryMoon(time, mood) {
+        const x = memoryWidth * (mood === "return" ? .78 : .84);
+        const y = memoryHeight * (mood === "dawn" ? .2 : .18);
+        const radius = Math.min(memoryWidth, memoryHeight) * .055;
+        const glow = memoryCtx.createRadialGradient(x, y, radius * .15, x, y, radius * 4.2);
+        glow.addColorStop(0, mood === "dawn" ? "rgb(255 234 197 / 22%)" : "rgb(242 224 197 / 28%)");
+        glow.addColorStop(1, "rgb(242 224 197 / 0%)");
+        memoryCtx.fillStyle = glow;
+        memoryCtx.beginPath(); memoryCtx.arc(x, y, radius * 4.2, 0, Math.PI * 2); memoryCtx.fill();
+        memoryCtx.fillStyle = "rgb(247 238 215 / 78%)";
+        memoryCtx.beginPath(); memoryCtx.arc(x, y, radius, 0, Math.PI * 2); memoryCtx.fill();
+        memoryCtx.fillStyle = "rgb(112 120 150 / 38%)";
+        memoryCtx.beginPath(); memoryCtx.arc(x + radius * .45, y - radius * .25, radius * .85, 0, Math.PI * 2); memoryCtx.fill();
+        if (mood === "return") {
+          memoryCtx.strokeStyle = "rgb(244 222 186 / 48%)";
+          memoryCtx.lineWidth = 1;
+          memoryCtx.beginPath(); memoryCtx.arc(x, y, radius * 1.55 + Math.sin(time * .001) * 3, 0, Math.PI * 2); memoryCtx.stroke();
+        }
+      }
+
+      function drawMemoryClouds(time, mood) {
+        const drift = (time * .008) % (memoryWidth + 180) - 90;
+        memoryCtx.save();
+        memoryCtx.globalAlpha = mood === "rain" ? .22 : .13;
+        memoryCtx.fillStyle = "#f8f4eb";
+        [[memoryWidth * .08 + drift, memoryHeight * .26, 90], [memoryWidth * .68 + drift * .55, memoryHeight * .34, 120]].forEach(([x, y, size]) => {
+          memoryCtx.beginPath();
+          memoryCtx.ellipse(x, y, size, size * .22, 0, 0, Math.PI * 2);
+          memoryCtx.ellipse(x - size * .42, y + 2, size * .34, size * .17, 0, 0, Math.PI * 2);
+          memoryCtx.ellipse(x + size * .34, y + 1, size * .4, size * .2, 0, 0, Math.PI * 2);
+          memoryCtx.fill();
+        });
+        memoryCtx.restore();
+      }
+
+      function drawMemoryRain(time) {
+        memoryCtx.save();
+        memoryCtx.globalAlpha = .18;
+        memoryCtx.strokeStyle = "#edf0f2";
+        memoryCtx.lineWidth = 1;
+        for (let i = 0; i < 48; i += 1) {
+          const x = (i * 83 + time * .05) % (memoryWidth + 40) - 20;
+          const y = (i * 47) % (memoryHeight * .68);
+          memoryCtx.beginPath(); memoryCtx.moveTo(x, y); memoryCtx.lineTo(x - 8, y + 18); memoryCtx.stroke();
+        }
+        memoryCtx.restore();
+      }
+
+      function drawMemoryKite(time, progress) {
+        const x = memoryWidth * (.57 + Math.sin(progress * Math.PI * 2) * .07);
+        const y = memoryHeight * (.33 + Math.sin(time * .0018) * .025);
+        memoryCtx.save();
+        memoryCtx.translate(x, y);
+        memoryCtx.rotate(Math.sin(time * .001) * .08);
+        memoryCtx.fillStyle = "#e8b6b2";
+        memoryCtx.beginPath(); memoryCtx.moveTo(0, -22); memoryCtx.lineTo(21, 0); memoryCtx.lineTo(0, 22); memoryCtx.lineTo(-21, 0); memoryCtx.closePath(); memoryCtx.fill();
+        memoryCtx.fillStyle = "#f6dfba";
+        memoryCtx.beginPath(); memoryCtx.moveTo(0, -21); memoryCtx.lineTo(21, 0); memoryCtx.lineTo(0, 0); memoryCtx.closePath(); memoryCtx.fill();
+        memoryCtx.strokeStyle = "rgb(83 73 103 / 52%)";
+        memoryCtx.lineWidth = 1.4;
+        memoryCtx.beginPath(); memoryCtx.moveTo(0, 20); memoryCtx.quadraticCurveTo(-17, 65, -4, 110); memoryCtx.stroke();
+        memoryCtx.restore();
+      }
+
+      function drawMemoryWishTrail(time, progress) {
+        memoryCtx.save();
+        memoryCtx.globalAlpha = .56;
+        memoryCtx.strokeStyle = "#f4dcbb";
+        memoryCtx.lineWidth = 2;
+        memoryCtx.beginPath();
+        memoryCtx.moveTo(memoryWidth * .25, memoryHeight * .61);
+        memoryCtx.bezierCurveTo(memoryWidth * .36, memoryHeight * (.47 + Math.sin(time * .001) * .025), memoryWidth * .58, memoryHeight * .55, memoryWidth * .7, memoryHeight * .3);
+        memoryCtx.stroke();
+        for (let i = 0; i < 7; i += 1) {
+          const t = (progress * 1.5 + i / 7) % 1;
+          const x = memoryWidth * (.25 + t * .45);
+          const y = memoryHeight * (.61 - Math.sin(t * Math.PI) * .24);
+          memoryCtx.fillStyle = i % 2 ? "#f6e8c9" : "#f4c6b8";
+          memoryCtx.beginPath(); memoryCtx.arc(x, y, i % 3 === 0 ? 3 : 1.6, 0, Math.PI * 2); memoryCtx.fill();
+        }
+        memoryCtx.restore();
+      }
+
+      function drawMemoryBench() {
+        const x = memoryWidth * .27;
+        const y = memoryHeight * .72;
+        memoryCtx.save();
+        memoryCtx.strokeStyle = "#6d6172";
+        memoryCtx.lineWidth = 8;
+        memoryCtx.lineCap = "round";
+        memoryCtx.beginPath(); memoryCtx.moveTo(x - 44, y); memoryCtx.lineTo(x + 44, y); memoryCtx.stroke();
+        memoryCtx.lineWidth = 4;
+        memoryCtx.beginPath(); memoryCtx.moveTo(x - 32, y + 2); memoryCtx.lineTo(x - 36, y + 32); memoryCtx.moveTo(x + 31, y + 2); memoryCtx.lineTo(x + 36, y + 32); memoryCtx.stroke();
+        memoryCtx.restore();
+      }
+
+      function drawMemoryForeground(time, mood) {
+        if (mood === "rain") {
+          memoryCtx.save(); memoryCtx.globalAlpha = .18; memoryCtx.fillStyle = "#4d4a6d";
+          memoryCtx.beginPath(); memoryCtx.moveTo(0, memoryHeight * .68); memoryCtx.quadraticCurveTo(memoryWidth * .08, memoryHeight * .48, memoryWidth * .18, memoryHeight * .72); memoryCtx.lineTo(0, memoryHeight); memoryCtx.closePath(); memoryCtx.fill(); memoryCtx.restore();
+        }
+        if (mood === "return") {
+          memoryCtx.save(); memoryCtx.globalAlpha = .24; memoryCtx.fillStyle = "#4d4b70";
+          memoryCtx.beginPath(); memoryCtx.moveTo(memoryWidth, 0); memoryCtx.lineTo(memoryWidth * .84, 0); memoryCtx.quadraticCurveTo(memoryWidth * .72, memoryHeight * .34, memoryWidth * .82, memoryHeight * .56); memoryCtx.lineTo(memoryWidth, memoryHeight * .66); memoryCtx.closePath(); memoryCtx.fill(); memoryCtx.restore();
+        }
+        memoryCtx.save();
+        memoryCtx.globalAlpha = .035;
+        memoryCtx.fillStyle = "#fffdf6";
+        for (let i = 0; i < 260; i += 1) {
+          const x = (i * 97 + time * .02) % memoryWidth;
+          const y = (i * 53) % memoryHeight;
+          memoryCtx.fillRect(x, y, 1, 1);
+        }
         memoryCtx.restore();
       }
 
@@ -1892,29 +2024,43 @@
         sky.addColorStop(1, scene.sky[1]);
         memoryCtx.fillStyle = sky;
         memoryCtx.fillRect(0, 0, memoryWidth, memoryHeight);
-        drawMemoryStars(time, sceneIndex === 3);
+        const cameraZoom = 1 + Math.sin(sceneProgress * Math.PI) * .045;
+        const cameraPan = Math.sin(sceneProgress * Math.PI * 2) * memoryWidth * .012;
+        memoryCtx.save();
+        memoryCtx.translate(memoryWidth * .5 + cameraPan, memoryHeight * .5);
+        memoryCtx.scale(cameraZoom, cameraZoom);
+        memoryCtx.translate(-memoryWidth * .5, -memoryHeight * .5);
+        drawMemoryMoon(time, scene.mood);
+        drawMemoryClouds(time, scene.mood);
+        drawMemoryStars(time, sceneIndex >= 4);
+        if (scene.mood === "rain") drawMemoryRain(time);
         drawMemoryGround(scene);
-        const walking = sceneIndex === 1;
-        const age = sceneIndex === 0 ? .72 : sceneIndex === 1 ? .82 : sceneIndex === 2 ? 1.02 : 1.26;
-        const girlX = sceneIndex < 2 ? memoryWidth * (.34 + sceneProgress * .11) : memoryWidth * .44;
+        const walking = scene.mood === "meet" || scene.mood === "play";
+        const age = scene.mood === "dawn" ? .92 : scene.mood === "meet" ? 1.02 : scene.mood === "play" ? 1.12 : scene.mood === "rain" ? 1.24 : scene.mood === "comfort" ? 1.38 : 1.5;
+        const girlX = scene.mood === "dawn" ? memoryWidth * .34 : scene.mood === "meet" ? memoryWidth * (.34 + sceneProgress * .15) : scene.mood === "play" ? memoryWidth * (.36 + sceneProgress * .22) : scene.mood === "rain" ? memoryWidth * .38 : scene.mood === "comfort" ? memoryWidth * (.43 + sceneProgress * .04) : memoryWidth * (.44 + sceneProgress * .025);
         const girlY = memoryHeight * (.67 + (walking ? Math.sin(sceneProgress * Math.PI * 2) * .02 : 0));
-        const bottleX = sceneIndex === 0 ? memoryWidth * .59 : sceneIndex === 1 ? memoryWidth * (.5 + sceneProgress * .14) : memoryWidth * .58;
-        const bottleY = memoryHeight * (sceneIndex === 3 ? .62 : .67);
-        if (sceneIndex === 2) drawMemoryTree(memoryWidth * .78, memoryHeight * .74, .72, true);
-        if (sceneIndex === 3) drawMemoryTree(memoryWidth * .76, memoryHeight * .74, .8, true);
-        drawMemoryGirl(girlX, girlY, age, sceneIndex === 2 ? "sad" : "happy", walking);
-        drawMemoryBottle(bottleX, bottleY, sceneIndex === 3 ? 1.12 : .8, sceneIndex >= 2, Math.sin(time * .004) * 4);
-        if (sceneIndex === 1) {
+        const bottleX = scene.mood === "dawn" ? memoryWidth * .6 : scene.mood === "meet" ? memoryWidth * (.55 - sceneProgress * .1) : scene.mood === "play" ? memoryWidth * (.54 + sceneProgress * .16) : scene.mood === "rain" ? memoryWidth * .56 : scene.mood === "comfort" ? memoryWidth * (.52 - sceneProgress * .07) : memoryWidth * (.57 - sceneProgress * .06);
+        const bottleY = scene.mood === "rain" ? memoryHeight * .63 : memoryHeight * .66;
+        if (scene.mood === "dawn") drawMemoryBench();
+        if (scene.mood === "meet") drawMemoryKite(time, sceneProgress);
+        if (scene.mood === "play") drawMemoryWishTrail(time, sceneProgress);
+        if (scene.mood === "rain" || scene.mood === "comfort") drawMemoryTree(memoryWidth * .8, memoryHeight * .74, .72, scene.mood === "comfort");
+        if (scene.mood === "return") drawMemoryTree(memoryWidth * .76, memoryHeight * .74, .84, true);
+        drawMemoryGirl(girlX, girlY, age, scene.mood === "rain" ? "sad" : "happy", walking);
+        drawMemoryBottle(bottleX, bottleY, scene.mood === "return" ? 1.34 : scene.mood === "comfort" ? 1.2 : scene.mood === "rain" ? 1.12 : scene.mood === "play" ? 1.02 : .98, scene.mood === "rain" ? false : scene.mood !== "dawn", Math.sin(time * .004) * 4);
+        if (scene.mood === "comfort") {
           memoryCtx.save();
-          memoryCtx.globalAlpha = .62 + sceneProgress * .2;
+          memoryCtx.globalAlpha = .42 + Math.sin(time * .003) * .08;
           memoryCtx.strokeStyle = "#f5dfbd";
-          memoryCtx.lineWidth = 3;
-          memoryCtx.beginPath();
-          memoryCtx.arc(memoryWidth * .56, memoryHeight * .45, 42 + sceneProgress * 20, .4, 2.1);
-          memoryCtx.stroke();
+          memoryCtx.lineWidth = 2;
+          memoryCtx.beginPath(); memoryCtx.arc(memoryWidth * .52, memoryHeight * .58, 68 + sceneProgress * 20, 0, Math.PI * 2); memoryCtx.stroke();
           memoryCtx.restore();
         }
-        if (sceneIndex >= 2) {
+        if (scene.mood === "play") {
+          memoryCtx.save(); memoryCtx.globalAlpha = .52; memoryCtx.strokeStyle = "#f5dfbd"; memoryCtx.lineWidth = 2;
+          memoryCtx.beginPath(); memoryCtx.moveTo(girlX + 32, girlY - 28); memoryCtx.quadraticCurveTo(memoryWidth * .5, memoryHeight * .52, bottleX - 18, bottleY - 22); memoryCtx.stroke(); memoryCtx.restore();
+        }
+        if (sceneIndex >= 3) {
           memoryCtx.save();
           memoryCtx.globalAlpha = .25 + Math.sin(time * .003) * .08;
           memoryCtx.strokeStyle = "#f6ddd1";
@@ -1925,17 +2071,31 @@
           memoryCtx.stroke();
           memoryCtx.restore();
         }
+        drawMemoryForeground(time, scene.mood);
+        memoryCtx.restore();
+      }
+
+      function drawMemoryTransition(sceneProgress) {
+        const edge = Math.min(sceneProgress, 1 - sceneProgress);
+        const fade = edge < .12 ? (1 - edge / .12) * .2 : 0;
+        if (!fade) return;
+        memoryCtx.save();
+        memoryCtx.globalAlpha = fade;
+        memoryCtx.fillStyle = "#25233d";
+        memoryCtx.fillRect(0, 0, memoryWidth, memoryHeight);
+        memoryCtx.restore();
       }
 
       function renderMemoryFrame(timestamp) {
         if (!memoryWidth || !memoryHeight) memoryResize();
-        const duration = 18000;
+        const duration = 30000;
         const elapsed = reducedMotion.matches ? 15000 : Math.max(0, timestamp - memoryStartedAt);
         const loopProgress = (elapsed / duration) % 1;
         const sceneFloat = loopProgress * memoryScenes.length;
         const sceneIndex = Math.min(memoryScenes.length - 1, Math.floor(sceneFloat));
         const sceneProgress = sceneFloat - sceneIndex;
         drawMemoryScene(timestamp, sceneIndex, memoryEase(sceneProgress));
+        drawMemoryTransition(sceneProgress);
         memoryCaption.textContent = memoryScenes[sceneIndex].caption;
         memoryProgress.style.width = `${loopProgress * 100}%`;
         if (memoryPlaying && !reducedMotion.matches) memoryFrame = window.requestAnimationFrame(renderMemoryFrame);
